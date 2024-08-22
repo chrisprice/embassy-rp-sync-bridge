@@ -30,16 +30,16 @@ impl<T, U, const N: usize, const M: usize> State<T, U, N, M> {
 }
 
 pub struct BidiChannel<'a, T, U, const N: usize, const M: usize> {
-    tx: Sender<'a, CriticalSectionRawMutex, T, N>,
-    rx: Receiver<'a, CriticalSectionRawMutex, U, M>,
+    tx: Sender<'a, CriticalSectionRawMutex, U, M>,
+    rx: Receiver<'a, CriticalSectionRawMutex, T, N>,
 }
 
 impl<'a, T, U, const N: usize, const M: usize> BidiChannel<'a, T, U, N, M> {
-    pub fn send(&self, item: T) -> Result<(), TrySendError<T>> {
+    pub fn send(&self, item: U) -> Result<(), TrySendError<U>> {
         self.tx.try_send(item)
     }
 
-    pub fn receive(&self) -> Result<U, TryReceiveError> {
+    pub fn receive(&self) -> Result<T, TryReceiveError> {
         self.rx.try_receive()
     }
 }
@@ -61,8 +61,8 @@ where
     let State { tx, rx } = state;
 
     let bidi_channel = BidiChannel {
-        tx: tx.sender(),
-        rx: rx.receiver(),
+        tx: rx.sender(),
+        rx: tx.receiver(),
     };
 
     multicore::spawn_core1(core1, stack, move || func(bidi_channel));
