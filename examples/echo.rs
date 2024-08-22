@@ -21,11 +21,19 @@ async fn main(_spawner: Spawner) {
 
     let (tx, rx) =
         embassy_rp_sync_bridge::spawn(p.CORE1, core1_stack, state, move |bidi_channel| loop {
-            let item = bidi_channel.receive().unwrap();
-            // keep trying until there's space in the channel
+            // loop until there's an item in the channel
             loop {
-                match bidi_channel.send(item) {
-                    Ok(_) => break,
+                match bidi_channel.receive() {
+                    Ok(item) => {
+                        info!("Received on core 1: {}", item);
+                        // loop until there's space in the channel
+                        loop {
+                            match bidi_channel.send(item) {
+                                Ok(_) => break,
+                                Err(_) => continue,
+                            }
+                        }
+                    }
                     Err(_) => continue,
                 }
             }
@@ -34,6 +42,6 @@ async fn main(_spawner: Spawner) {
     loop {
         tx.send(42).await;
         let item = rx.receive().await;
-        info!("Received: {}", item);
+        info!("Received on core 0: {}", item);
     }
 }
