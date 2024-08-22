@@ -1,5 +1,6 @@
 #![no_std]
 
+use cortex_m::{peripheral::SYST, Peripherals};
 use embassy_rp::{
     multicore::{self, Stack},
     peripherals::CORE1,
@@ -54,7 +55,7 @@ pub fn spawn<F, T, U, const N: usize, const M: usize, const S: usize>(
     Receiver<'static, CriticalSectionRawMutex, U, M>,
 )
 where
-    F: FnOnce(BidiChannel<'static, T, U, N, M>) -> bad::Never + Send + 'static,
+    F: FnOnce(BidiChannel<'static, T, U, N, M>, SYST) -> bad::Never + Send + 'static,
     T: Send,
     U: Send,
 {
@@ -65,7 +66,12 @@ where
         rx: tx.receiver(),
     };
 
-    multicore::spawn_core1(core1, stack, move || func(bidi_channel));
+    
+    multicore::spawn_core1(core1, stack, move || {
+        // SAFETY: embassy-rp is not using the SYST peripheral
+        let syst = unsafe { Peripherals::steal() }.SYST;
+        func(bidi_channel, syst)
+    });
 
     (tx.sender(), rx.receiver())
 }
