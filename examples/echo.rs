@@ -24,8 +24,7 @@ async fn main(_spawner: Spawner) {
         p.CORE1,
         core1_stack,
         state,
-        move |bidi_channel, syst| loop {
-            let mut delay = Delay::new(syst, clk_sys_freq());
+        move |bidi_channel, mut delay| loop {
             // loop until there's an item in the channel
             loop {
                 match bidi_channel.receive() {
