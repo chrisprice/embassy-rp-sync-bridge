@@ -1,0 +1,38 @@
+#![no_std]
+#![no_main]
+
+use defmt::*;
+use embassy_executor::Spawner;
+use embassy_rp::multicore::Stack;
+use embassy_rp_sync_bridge::State;
+use static_cell::StaticCell;
+use {defmt_rtt as _, panic_probe as _};
+
+static CORE1_STACK: StaticCell<Stack<4096>> = StaticCell::new();
+static STATE: StaticCell<State<usize, usize, 1, 1>> = StaticCell::new();
+
+#[embassy_executor::main]
+async fn main(_spawner: Spawner) {
+    let p = embassy_rp::init(Default::default());
+
+    let core1_stack = CORE1_STACK.init(Stack::new());
+    let state = STATE.init(State::new());
+
+    let (tx, rx) =
+        embassy_rp_sync_bridge::spawn(p.CORE1, core1_stack, state, move |bidi_channel| loop {
+            let item = bidi_channel.receive().unwrap();
+            // keep trying until there's space in the channel
+            loop {
+                match bidi_channel.send(item) {
+                    Ok(_) => break,
+                    Err(_) => continue,
+                }
+            }
+        });
+
+    loop {
+        tx.send(42).await;
+        let item = rx.receive().await;
+        info!("Received: {}", item);
+    }
+}
