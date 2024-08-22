@@ -4,9 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-cortex-m = "0.7.7"
 embassy-rp = { version = "0.2.0", features = ["critical-section-impl"] }
 embassy-sync = "0.6.0"
+embassy-time = "0.3.2"
 embedded-hal = "1.0.0"
 
 [dev-dependencies]

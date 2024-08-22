@@ -1,11 +1,11 @@
 #![no_std]
 #![no_main]
 
-use cortex_m::delay::Delay;
 use defmt::*;
 use embassy_executor::Spawner;
-use embassy_rp::{clocks::clk_sys_freq, multicore::Stack};
+use embassy_rp::multicore::Stack;
 use embassy_rp_sync_bridge::State;
+use embedded_hal::delay::DelayNs;
 use static_cell::StaticCell;
 use {defmt_rtt as _, panic_probe as _};
 

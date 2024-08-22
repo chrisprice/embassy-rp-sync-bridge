@@ -1,8 +1,6 @@
 #![no_std]
 
-use cortex_m::{delay::Delay, Peripherals};
 use embassy_rp::{
-    clocks::clk_sys_freq,
     multicore::{self, Stack},
     peripherals::CORE1,
 };
@@ -10,6 +8,7 @@ use embassy_sync::{
     blocking_mutex::raw::CriticalSectionRawMutex,
     channel::{Channel, Receiver, Sender, TryReceiveError, TrySendError},
 };
+use embassy_time::Delay;
 
 pub struct State<T, U, const N: usize, const M: usize> {
     tx: Channel<CriticalSectionRawMutex, T, N>,
@@ -68,9 +67,7 @@ where
     };
 
     multicore::spawn_core1(core1, stack, move || {
-        // SAFETY: embassy-rp is not using the SYST peripheral
-        let syst = unsafe { Peripherals::steal() }.SYST;
-        let delay = Delay::new(syst, clk_sys_freq());
+        let delay = Delay;
         func(bidi_channel, delay)
     });
 
