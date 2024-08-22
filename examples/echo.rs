@@ -13,6 +13,7 @@ static STATE: StaticCell<State<usize, usize, 1, 1>> = StaticCell::new();
 
 #[embassy_executor::main]
 async fn main(_spawner: Spawner) {
+    info!("Hello, world!");
     let p = embassy_rp::init(Default::default());
 
     let core1_stack = CORE1_STACK.init(Stack::new());

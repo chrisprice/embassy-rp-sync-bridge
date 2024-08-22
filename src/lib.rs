@@ -1,3 +1,5 @@
+#![no_std]
+
 use embassy_rp::{
     multicore::{self, Stack},
     peripherals::CORE1,

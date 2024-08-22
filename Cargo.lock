@@ -373,6 +373,7 @@ dependencies = [
  "embassy-hal-internal",
  "embassy-sync",
  "embassy-time",
+ "embassy-time-driver",
  "embassy-usb-driver",
  "embedded-hal 0.2.7",
  "embedded-hal 1.0.0",
@@ -395,6 +396,7 @@ dependencies = [
 name = "embassy-rp-sync-bridge"
 version = "0.1.0"
 dependencies = [
+ "cortex-m",
  "cortex-m-rt",
  "defmt",
  "defmt-rtt",
@@ -403,6 +405,7 @@ dependencies = [
  "embassy-sync",
  "embedded-hal 1.0.0",
  "panic-probe",
+ "portable-atomic",
  "static_cell",
 ]
 
@@ -919,6 +922,9 @@ name = "portable-atomic"
 version = "1.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "da544ee218f0d287a911e9c99a39a8c9bc8fcad3cb8db5959940044ecfc67265"
+dependencies = [
+ "critical-section",
+]
 
 [[package]]
 name = "precomputed-hash"
