@@ -13,8 +13,12 @@ embedded-hal = "1.0.0"
 cortex-m-rt = "0.7.3"
 defmt = "0.3.8"
 defmt-rtt = "0.4.1"
+display-interface = "0.5.0"
+display-interface-spi = "0.5.0"
+eg-seven-segment = "0.2.0"
+embassy-embedded-hal = "0.2.0"
 embassy-executor = { version = "0.6.0", features = [
-    "task-arena-size-98304",
+    "task-arena-size-32768",
     "arch-cortex-m",
     "executor-thread",
     "executor-interrupt",
@@ -22,6 +26,9 @@ embassy-executor = { version = "0.6.0", features = [
     "integrated-timers",
 ] }
 embassy-rp = { version = "0.2.0", features = ["time-driver"] }
+embedded-graphics = { version = "0.8.1", features = ["fixed"] }
+embedded-hal = "1.0.0"
+gc9a01-rs = "0.2.1"
 panic-probe = { version = "0.3", features = ["print-defmt"] }
 portable-atomic = { version = "1.7.0", features = ["critical-section"] }
 static_cell = "2.1.0"
