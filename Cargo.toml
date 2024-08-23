@@ -31,4 +31,5 @@ embedded-hal = "1.0.0"
 gc9a01-rs = "0.2.1"
 panic-probe = { version = "0.3", features = ["print-defmt"] }
 portable-atomic = { version = "1.7.0", features = ["critical-section"] }
+qmi8658 = { git = "https://github.com/IniterWorker/qmi8658.git", rev = "b4c4409e131ffe24cacaf4f5819e38068e5e1d67" }
 static_cell = "2.1.0"

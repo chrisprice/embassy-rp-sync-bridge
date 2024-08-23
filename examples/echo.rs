@@ -24,7 +24,8 @@ async fn main(_spawner: Spawner) {
         p.CORE1,
         core1_stack,
         state,
-        move |bidi_channel, mut delay| loop {
+        move |bidi_channel| loop {
+            let mut delay = embassy_time::Delay;
             // loop until there's an item in the channel
             loop {
                 match bidi_channel.receive() {
